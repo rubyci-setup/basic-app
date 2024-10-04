@@ -11,6 +11,24 @@
 # a separate helper file that requires the additional dependencies and performs
 # the additional setup, and require it from the spec files that actually need
 # it.
+if ENV["FAST_CI_SECRET_KEY"]
+  require "fast_ci"
+  require "rspec/core/runner"
+  require "fast_ci/runner_prepend"
+
+  class RSpec::Core::ExampleGroup
+    def self.filtered_examples
+      ids = Thread.current[:rubyci_scoped_ids] || ""
+
+      RSpec.world.filtered_examples[self].filter do |ex|
+        ids == "" || /^#{ids}($|:)/.match?(ex.metadata[:scoped_id])
+      end
+    end
+  end
+
+  RSpec::Core::Runner.prepend(FastCI::RunnerPrepend)
+end
+
 require 'simplecov'
 
 # SimpleCov::Formatter::HTMLFormatter, add as first in list of formatters if need
