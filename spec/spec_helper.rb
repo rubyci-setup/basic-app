@@ -18,7 +18,7 @@ if ENV["FAST_CI_SECRET_KEY"]
 
   class RSpec::Core::ExampleGroup
     def self.filtered_examples
-      ids = Thread.current[:rubyci_scoped_ids] || ""
+      ids = Thread.current[:fastci_scoped_ids] || ""
 
       RSpec.world.filtered_examples[self].filter do |ex|
         ids == "" || /^#{ids}($|:)/.match?(ex.metadata[:scoped_id])
@@ -29,7 +29,8 @@ if ENV["FAST_CI_SECRET_KEY"]
   RSpec::Core::Runner.prepend(FastCI::RunnerPrepend)
 end
 
-require 'simplecov'
+require "simplecov"
+require "fast_ci/simple_cov"
 
 # SimpleCov::Formatter::HTMLFormatter, add as first in list of formatters if need
 SimpleCov.formatters = SimpleCov::Formatter::HTMLFormatter
