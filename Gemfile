@@ -75,5 +75,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem 'minitest', '~> 5.18'
   gem 'fast_ci'
 end
